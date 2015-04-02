@@ -52,6 +52,9 @@ public class HelloWorldHandler extends SimpleChannelInboundHandler<HttpRequest> 
             response.headers().set(CONTENT_LENGTH, response.content().readableBytes());
 
             //delay for 10 sec
+            //it's better practise to use executor().schedule()
+            //than thread.sleep(), cause thread sleep() block whole thread
+            //while executor().schedule() doesn't
             ctx.executor().schedule(new Runnable() {
                 @Override
                 public void run() {
