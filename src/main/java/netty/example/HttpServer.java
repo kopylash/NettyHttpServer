@@ -32,7 +32,7 @@ public class HttpServer {
 
             //bind and start to accept incoming connections
             ChannelFuture future = b.bind(port).sync();
-            System.out.println("Server has started...");
+            System.out.println("Server has started at port "+port);
 
             //waits until server socket is closed
             future.channel().closeFuture().sync();

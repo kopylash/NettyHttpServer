@@ -14,8 +14,8 @@ import netty.example.handlers.HelloWorldHandler;
 public class HttpServerInitializer extends ChannelInitializer<Channel> {
     @Override
     protected void initChannel(Channel channel) throws Exception {
-        ChannelPipeline pipeline = channel.pipeline();
-        pipeline.addLast("shaping-handler", new ChannelTrafficShapingHandler(1000));
+        ChannelPipeline pipeline = channel.pipeline();  //store the list of channel handlers (Intercepting Filter)
+        pipeline.addLast("shaping-handler", new ChannelTrafficShapingHandler(1000)); //delay between each check
         pipeline.addLast("server-codec", new HttpServerCodec());
         pipeline.addLast(new HelloWorldHandler());
     }
