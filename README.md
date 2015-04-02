@@ -12,4 +12,4 @@ Implementation details.
 During developing I used Netty.io site, their user guide, Habrahabr.com, JavaDocs of Netty framework.
 There are comments in code that explain the nuances of implementation, I hope it will be enough.
 
-
+Screenshots are in /resources package
