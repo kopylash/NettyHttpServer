@@ -7,6 +7,7 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.traffic.ChannelTrafficShapingHandler;
 import netty.example.handlers.HelloWorldHandler;
 import netty.example.handlers.RedirectHandler;
+import netty.example.handlers.StatusHandler;
 
 /**
  * Class for ChannelPipeline initialization
@@ -16,9 +17,11 @@ public class HttpServerInitializer extends ChannelInitializer<Channel> {
     @Override
     protected void initChannel(Channel channel) throws Exception {
         ChannelPipeline pipeline = channel.pipeline();  //store the list of channel handlers (Intercepting Filter)
-        pipeline.addLast("shaping-handler", new ChannelTrafficShapingHandler(1000)); //delay between each check
+        //to monitor bandwidth and set a delay between each check
+        pipeline.addLast("shaping-handler", new ChannelTrafficShapingHandler(1000));
         pipeline.addLast("server-codec", new HttpServerCodec());
-        pipeline.addLast(new HelloWorldHandler());
-        pipeline.addLast(new RedirectHandler());
+        pipeline.addLast("hello-handler", new HelloWorldHandler());
+        pipeline.addLast("redirect-handler", new RedirectHandler());
+        pipeline.addLast("status-handler", new StatusHandler());
     }
 }

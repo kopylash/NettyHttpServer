@@ -6,6 +6,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpRequest;
+import netty.example.statistics.StatisticsController;
 
 import static io.netty.handler.codec.http.HttpHeaders.Names.LOCATION;
 import static io.netty.handler.codec.http.HttpResponseStatus.FOUND;
@@ -16,6 +17,8 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
  * Class to handle "/redirect?url=" requests
  */
 public class RedirectHandler extends SimpleChannelInboundHandler<HttpRequest> {
+    private static StatisticsController controller = new StatisticsController();
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, HttpRequest req) throws Exception {
         String requestHTTP = req.getUri();
@@ -28,6 +31,11 @@ public class RedirectHandler extends SimpleChannelInboundHandler<HttpRequest> {
             FullHttpResponse fullHttpResponse = new DefaultFullHttpResponse(HTTP_1_1, FOUND);
             fullHttpResponse.headers().set(LOCATION, urlToRedirect);
             ctx.writeAndFlush(fullHttpResponse).addListener(ChannelFutureListener.CLOSE);
+            String url = req.getUri();
+            controller.IncreaseCount();
+            controller.addToIpMap(ctx);
+            controller.addToConnectionDeque(ctx, url);
+            StatisticsController.processRedirectRequest(urlToRedirect);
         } else {
             ctx.fireChannelRead(req);
         }
